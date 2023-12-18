@@ -63,20 +63,26 @@ public class SimpleBST<K,V> implements SimpleMap<K,V> {
 
   public BSTNode<K, V> setHelper(BSTNode<K, V> node, K key, V value) {
     if (node == null) {
-      node.right = new BSTNode<K, V>(key, value);
-    } else {
-      if (this.comparator.compare(key, node.key) < 0) {
+      cachedValue = null;
+      return new BSTNode<K, V>(key, value);
+    }
+      
+    if (this.comparator.compare(key, node.key) < 0) {
         node.left = setHelper(node.left, key, value);
       } else if (this.comparator.compare(key, node.key) > 0) {
         node.right = setHelper(node.right, key, value);
+      } else {
+      cachedValue = node.value;
+      node.value = value;
       }
-    }
     return node;
   }
 
   @Override
   public V set(K key, V value) {
-    return null;        // STUB
+    this.root = setHelper(root, key, value);
+    return cachedValue;
+
   } // set(K,V)
 
   @Override
